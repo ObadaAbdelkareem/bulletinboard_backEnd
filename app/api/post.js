@@ -3,29 +3,35 @@ module.exports = (app, db) => {
    * get posts cards list
    */
   app.get( "/posts", (req, res) =>
-    db.post.findAll().then( (result) => res.json(result) )
+    db.post.findAll(
+      {include: [{
+      model: db.comment,
+    }]}
+    ).then( (result) => res.json(result) )
   );
 
   /**
    * get specific post card with id
    */
   app.get( "/post/:id", (req, res) =>
-    db.post.findById(req.params.id).then( (result) => res.json(result))
+    db.post.findById(req.params.id,{include: [{
+      model: db.comment,
+    }]}).then( (result) => res.json(result))
   );
 
   /**
    * create new post card
    */
   app.post("/post", (req, res) => 
+  // console.log("req.body",req.body)
     db.post.create({
       title: req.body.title,
       content: req.body.content,
-      comments:req.bod.comments
+      comments: req.body.comments//[{content:"obada test from back1"},{content:"obada test from back2"},{content:"obada test from back3"}]//req.body.comments
     },{
-      iinclude: [{
-        model: db.comment,
-      }],
+      include: [db.comment],
     }).then( (result) => res.json(result) )
+    
 
   );
   
@@ -35,12 +41,15 @@ module.exports = (app, db) => {
   app.put( "/post/:id", (req, res) =>
     db.post.update({
       title: req.body.title,
-      content: req.body.content
+      content: req.body.content,
+      comments:req.body.comments
     },
     {
       where: {
         id: req.params.id
       }
+    },{
+      include: [db.comment],
     }).then( (result) => res.json(result) )
   );
   
