@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
   );
 
   Post.associate = (models) => {
-    Post.belongsTo(models.author);
+    Post.hasMany(models.comment);
   };
 
   return Post;

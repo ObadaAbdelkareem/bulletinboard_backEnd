@@ -5,21 +5,28 @@ const times = require("lodash.times");
 const random = require("lodash.random");
 const db = require("./models");
 const apiPost = require("./app/api/post");
-const apiAuthor = require("./app/api/author");
+const apiComment = require("./app/api/comment");
 
 const app = express();
 app.use(bodyParser.json());
 app.use(express.static("app/public"));
+var cors = require('cors');
 
+app.use(cors({
+  'allowedHeaders': ['sessionId', 'Content-Type'],
+  'exposedHeaders': ['sessionId'],
+  'origin': '*',
+  'methods': 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  'preflightContinue': false
+}));
 apiPost(app, db);
-apiAuthor(app, db);
+apiComment(app, db);
 
 db.sequelize.sync().then(() => {
-  // populate author table with dummy data
-  db.author.bulkCreate(
+  // populate comment table with dummy data
+  db.comment.bulkCreate(
     times(10, () => ({
-      firstName: faker.name.firstName(),
-      lastName: faker.name.lastName()
+      content: faker.lorem.paragraph(),
     }))
   );
   // populate post table with dummy data
@@ -27,8 +34,8 @@ db.sequelize.sync().then(() => {
     times(10, () => ({
       title: faker.lorem.sentence(),
       content: faker.lorem.paragraph(),
-      authorId: random(1, 10)
+      // commentId: random(1, 10)
     }))
   );
-  app.listen(8080, () => console.log("App listening on port 8080!"));
+  app.listen(8081, () => console.log("App listening on port 8080!"));
 });

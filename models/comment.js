@@ -1,21 +1,20 @@
 module.exports = (sequelize, DataTypes) => {
-  const Author = sequelize.define('author', {
+  const Comment = sequelize.define('comment', {
       id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true
       },
-      firstName: DataTypes.STRING,
-      lastName: DataTypes.STRING
+      content: DataTypes.STRING
     },
     {
       freezeTableName: true,
     }
   );
 
-  Author.associate = (models) => {
-    Author.hasMany(models.post);
+  Comment.associate = (models) => {
+    Comment.belongsTo(models.post);
   };
 
-  return Author;
+  return Comment;
 }
