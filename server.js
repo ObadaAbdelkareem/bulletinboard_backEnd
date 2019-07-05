@@ -8,6 +8,7 @@ const apiPost = require("./app/api/post");
 const apiComment = require("./app/api/comment");
 
 const app = express();
+
 app.use(bodyParser.json());
 app.use(express.static("app/public"));
 var cors = require('cors');

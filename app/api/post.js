@@ -1,3 +1,8 @@
+const multer = require("multer");
+
+const upload = multer({
+  dest:'./uploads'
+})
 module.exports = (app, db) => {
   /**
    * get posts cards list
@@ -51,6 +56,15 @@ module.exports = (app, db) => {
     },{
       include: [db.comment],
     }).then( (result) => res.json(result) )
+  );
+
+
+  /**
+   * upload image card
+   */
+  app.post( "/upload", upload.single('file'),(req, res) =>
+    
+  res.json({file:req.file})
   );
   
   /**
